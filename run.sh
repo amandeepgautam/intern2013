@@ -1,3 +1,6 @@
+#!/bin/bash
+#Sample command: ./run.sh {Type of graph format} {location of input file} {the name of the output file}. 
+#The following will serve as an example: ./run.sh 0 dataset/test output/1
 #initialize directory structure
 BINDIR=bin
 OBJDIR=obj
