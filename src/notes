@@ -1,0 +1,5 @@
+UPDATE 1:
+
+The graph traversal is allowed to come to the root vertex again.
+During the traversal(depth d) the parent is not included in the 
+queue again(to reduce to and fro motion of traversal).
