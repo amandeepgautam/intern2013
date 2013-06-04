@@ -4,17 +4,18 @@
 #initialize directory structure
 BINDIR=bin
 OBJDIR=obj
+OUTPUT=output
 if [ ! -d "$BINDIR" ]; then
 	mkdir "$BINDIR"
 fi
 if [ ! -d "$OBJDIR" ]; then
 	mkdir "$OBJDIR"
 fi
-clear
-clear
+if [ ! -d "$OUTPUT" ]; then
+	mkdir "$OUTPUT"
+fi
 clear
 make
-
 if [ $? -eq 0 ]; then
 	make TYPE=${1} INP_FILE=${2} OUT_FILE=${3} GRD_TRUTH=${4} run 
 else
