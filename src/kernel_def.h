@@ -19,10 +19,10 @@ class kernel {
 
 class feature_vector {
 	private:
-		map<int, int> freq;	//<id_of_node, corresponding frequency>
+		map<int, int> freq;	//map<nodeId, corresponding_frequency>
 	public:
 		feature_vector();
-		void add(int key);
+		void add(int key, int value);
 		void print() const;
 		friend int kernel::calculate();
 };

@@ -2,6 +2,7 @@
 #include <queue>
 
 #include "graph.h"
+#include "global.h"
 
 using namespace std;
 
@@ -70,34 +71,75 @@ void matGraph::printGraph() {
 	}
 }
 
-feature_vector *matGraph::subgraph_d(int node, int depth) {
+feature_vector *matGraph::subgraphD(int node, int depth) {
+#ifdef LOGGING
+	logFileObj<<"node: "<<node<<endl;
+#endif
 	feature_vector *fv = new feature_vector;
-	int this_level=0, next_level=0;
-	queue<int> que;
-	queue<int> parent_que;
-	que.push(node);
-	parent_que.push(-1);	/*No parent.*/
-	++this_level;
-	int number_of_nodes = getNodes();
-	while(depth!=0 && !que.empty()) {
-		int temp = que.front();
-		int parent = parent_que.front();
-		que.pop();
-		parent_que.pop();
-		fv->add(temp);	/*add the key.*/
-		--this_level;
-		for(int i=0; i<number_of_nodes; ++i) {
-			if(matrix[temp][i] && i!=parent) {
-				que.push(i);
-				parent_que.push(temp);
-				++next_level;
+	int prev_level=0, curr_level=1, next_level = 2, nodes=getNodes();
+	vector< map<int, int> > node_count(3);
+	++((node_count.at(curr_level))[node]);
+	++depth;
+	while(depth!=1) {
+		map<int, int> &nPM = node_count.at(prev_level);			//nodePreviousMap
+		map<int, int> &nCM = node_count.at(curr_level);			//nodeCurrentMap
+		map<int, int> &nNM = node_count.at(next_level);			//nodeNextMap
+		for(map<int, int>::iterator it = nCM.begin(); it!=nCM.end(); ++it) {
+			int temp = it->first;	//get a node.
+			fv->add(temp, it->second);
+			for(int i=0; i<nodes; ++i) {
+				if(matrix[temp][i] && nPM.count(i)==0) {
+					nNM[i] += it->second;
+				}
 			}
 		}
-		if(!this_level) {
-			this_level = next_level;
-			next_level = 0;
-			--depth;
+#ifdef DEBUG
+		if(debugLevel>=1) {
+			cout<<"Prev. level node list"<<endl;
+			cout<<"nodes:\t";
+			for(map<int, int>::iterator it = nPM.begin(); it!=nPM.end();++it) {
+				cout<<it->first<<"\t";
+			}
+			cout<<endl<<"count:\t";
+			for(map<int, int>::iterator it = nPM.begin(); it!=nPM.end();++it) {
+				cout<<it->second<<"\t";
+			}
+			cout<<endl<<"Current level node list"<<endl;
+			cout<<"nodes:\t";
+			for(map<int, int>::iterator it = nCM.begin(); it!=nCM.end();++it) {
+				cout<<it->first<<"\t";
+			}
+			cout<<endl<<"count:\t";
+			for(map<int, int>::iterator it = nCM.begin(); it!=nCM.end();++it) {
+				cout<<it->second<<"\t";
+			}
+			cout<<endl<<"Next level node list"<<endl;
+			cout<<"nodes:\t";
+			for(map<int, int>::iterator it = nNM.begin(); it!=nNM.end();++it) {
+				cout<<it->first<<"\t";
+			}
+			cout<<endl<<"count:\t";
+			for(map<int, int>::iterator it = nNM.begin(); it!=nNM.end();++it) {
+				cout<<it->second<<"\t";
+			}
+			cout<<endl<<"----------------------------"<<endl;
 		}
+#endif
+		nPM.clear();
+		int swapInt = prev_level;
+		prev_level = curr_level;
+		curr_level = next_level;
+		next_level = swapInt;
+		--depth;
 	}
+	for(map<int, int>::const_iterator it= (node_count.at(curr_level).begin()); it!=(node_count.at(curr_level).end()); ++it) {
+		fv->add(it->first, it->second);
+	}
+#ifdef DEBUG
+	if(debugLevel>=1) {
+		cout<<"Printing the vector"<<endl;
+		fv->print();
+	}
+#endif
 	return fv;
 }

@@ -29,7 +29,7 @@ class baseGraph {
 
 		/*Utility functions*/
 		virtual void printGraph() = 0;
-		virtual feature_vector *subgraph_d(int node, int depth) = 0;	/*subgraph upto depth d.*/
+		virtual feature_vector *subgraphD(int node, int depth) = 0;	/*subgraph upto depth d.*/
 };
 
 class matGraph: public baseGraph {
@@ -40,7 +40,7 @@ class matGraph: public baseGraph {
 		TwoDArray getMatrix();
 		void setGraph(ifstream &ipf);
 		void printGraph();
-		feature_vector *subgraph_d(int nodes, int depth);
+		feature_vector *subgraphD(int nodes, int depth);
 };
 
 #endif

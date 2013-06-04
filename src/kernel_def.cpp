@@ -1,16 +1,13 @@
 #include <iostream>
 #include "kernel_def.h"
+#include "global.h"
 
 feature_vector::feature_vector() {
 	//empty constructor.
 }
 
-void feature_vector::add(int key) {
-	map<int, int>::iterator it = freq.find(key);
-	if(it==freq.end())
-		freq[key]=1;
-	else
-		++freq[key];
+void feature_vector::add(int key, int value) {
+	freq[key] += value;
 }
 
 void feature_vector::print() const {
@@ -37,6 +34,14 @@ void kernel::setSecond(const feature_vector *second) {
 }
 
 int kernel::calculate() {
+#ifdef DEBUG
+	if(debugLevel>=1) {
+		cout<<"Calculating the vector between"<<endl;
+		first->print();
+		cout<<"and "<<endl;
+		second->print();
+	}
+#endif
 	int num = 0;
 	map<int, int>::const_iterator first_it = (first->freq).begin();
 	map<int, int>::const_iterator second_it = (second->freq).begin();
@@ -51,5 +56,10 @@ int kernel::calculate() {
 			++second_it;
 		}
 	}
+#ifdef DEBUG
+	if(debugLevel>=1) {
+		cout<<"num: "<<num<<endl;
+	}
+#endif
 	return num;
 }

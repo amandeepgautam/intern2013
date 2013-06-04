@@ -35,7 +35,7 @@ $(OBJECTS)		:	$(OBJDIR)/%.o :$(SRCDIR)/%.cpp
 
 .PHONY	: 	run
 run		:
-	./$(BINDIR)/$(TARGET) ${TYPE} ${INP_FILE} ${OUT_FILE}
+	./$(BINDIR)/$(TARGET) ${TYPE} ${INP_FILE} ${OUT_FILE} ${GRD_TRUTH}
 
 print:
 	@echo $(OBJECTS)
